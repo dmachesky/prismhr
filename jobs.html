@@ -1,0 +1,190 @@
+<!--Start PrismHR References-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+<script src="https://setup.trionworksats.com/scripts/agile.api.externaljob.wp.nc.1.0.js?v=1"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        loadOpenJobRequisitions();
+    });
+</script>
+		 
+<style>
+	#search {
+		padding-bottom: 20px;
+	}
+	#searchTextBox {
+		width: 400px;
+		padding: 5px;
+	}
+		 
+
+	.location-department {
+		padding-top: 5px;
+	}
+
+	.job{
+		margin-top: 10px;
+		background-color: white;
+		padding-right: 15px;
+		padding-bottom: 35px;
+	}
+	
+	.jobTitle{
+		font-size: 14pt;
+		color: #426491;
+	}
+	
+	.job p, #jobAdvertisement p {
+		margin-top: 10px;
+		padding-bottom: 10px;
+	}
+		 
+
+	.job-link {
+		color: white !important;
+		background-color: #426491;
+		cursor: pointer;
+		padding: 10px;
+		text-decoration: none !important;
+	}
+		 
+	.job-link:hover {
+		background-color: #83a0c7;
+		color: white;
+	}
+
+	#jobAdvertisement {
+		width: 680px;
+		padding: 20px;
+	}
+		 
+
+		#jobAlert th, #jobAlert td {
+		padding: 5px;
+	}
+		 
+	#jobAlert .error {
+		color: #FF4338;
+		background-color: white;
+	}
+		 
+	#jobAlert .success {
+		color: green;
+		background-color: white;
+	}
+		 
+</style>
+<!--End PrismHR References-->
+
+<div class="job-block">
+	<div class="row">
+		<div class="col-sm-12">
+			<!--Start PrismHR Jobs Block-->
+			<div id="agileHrJobList" data-id="159e371c-c57f-4688-8b09-41c93b2fd6e2|4050b5f7-2ab6-4b0f-9707-46719cb18d4e|6648178c-12ab-4091-a072-5a3bf34b5369|083a2ff6-a5db-4bbd-8548-e6b1968b974f|9d22223e-cc9a-428b-a5c7-ea98efe8ddc5|1e6dbd81-d339-41fc-ad43-0c388a17dcc5|2409ea04-a11e-4815-97c8-d6561ffe06fe|9f913067-5e5c-45fb-8388-54d88f879161|e3b5b368-e672-4bf4-8c0f-b2ffb607bfdd|826ae96f-05d6-4143-ac18-c5fdb31ddd90|f50cdd0a-14fb-4e10-83c2-ddacd88d0f7c|cf410245-67fd-4fe1-9882-0f40bb2100a2|731f5181-d80e-4f20-a992-b139afc127b0|b1e0e720-a7be-4f27-8af1-82c820e2265d|61ec7264-077a-44b6-ae0b-d346b703caa9|57bf2fb2-2c6e-40b2-9e4a-7e154056d141" >
+				<a href="#jobAlert" rel="modal:open" class="job-link">
+					Create Your Job Alert
+				</a>
+				<div id="search" style="padding-top: 20px;" data-bind="visible:!noJobsAvailable">
+					<span>Search Positions</span><br /><input id="searchTextBox" type="text" data-bind="value:filter, valueUpdate:'afterkeydown'" />
+				</div>
+				<div data-bind="foreach: jobs">
+					<div class="job">
+						<!-- <h1 style="margin-bottom: 0;" data-bind="text:Title"></h1> -->
+						<a class="jobTitle" rel="modal:open" data-bind="text: Title; click: $parent.jobDetail.bind(this, 'open', $data)" href="#jobAdvertisement">
+							Job Title
+						</a>
+						
+						<div class="location-department">
+							<span data-bind="text:JobClassification"></span>&nbsp;|&nbsp;<span data-bind="text:City"></span>&nbsp;<span data-bind="text:State"></span>
+						</div>
+						
+						<div style="padding: 20px 10px 10px 0px;">
+							<span data-bind="visible: AllowQuickApply">
+								<a class="job-link" data-bind="attr: { href: QuickApplyUrl }" target="_blank">
+									Quick Apply
+								</a>
+								&nbsp;&nbsp;
+							</span>
+
+							<span data-bind="visible: AllowStandardApply">
+								<a class="job-link" data-bind="attr: { href: $parent.applyNowLink(this, $data) }" target="_blank">
+									Apply Now
+								</a>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="project_info project_content project_info" style="width: 680px; margin-top: 10px; background-color: white;" data-bind="visible:noMatchingJobsFound() ">
+					<strong>No matching jobs found</strong>
+				</div>
+				<div class="project_info project_content project_info" style="width: 680px; margin-top: 10px; background-color: white;" data-bind="visible:noJobsAvailable">
+					<strong>No jobs are available at this time</strong>
+				</div>
+
+				<!--Start Modal windows-->
+				<div id="jobAdvertisement" data-bind="with: currentJob" style="display: none; min-width:80%">
+					<h1 style="margin-bottom: 0;" data-bind="text:Title"></h1>
+					<div class="location-department">
+						<b>Location:</b>&nbsp;<span data-bind="text:City"></span>&nbsp;<span data-bind="text:State"></span>
+					</div>
+					<hr/>
+					<div style="padding: 10px 10px 10px 0px;">
+						<span data-bind="visible: AllowQuickApply">
+							<a class="job-link" data-bind="attr: { href: QuickApplyUrl }" target="_blank">
+								Quick Apply
+							</a>
+							&nbsp;&nbsp;
+						</span>
+
+						<span data-bind="visible: AllowStandardApply">
+							<a class="job-link" data-bind="attr: { href: $parent.applyNowLink(this, $data) }" target="_blank">
+								Apply Now
+							</a>
+						</span>
+						&nbsp;&nbsp;
+						<a class="job-link" rel="modal:close" href="#" data-bind="click: $parent.jobDetail.bind(this,'close')" target="_blank">
+							Close
+						</a>
+					</div>
+					<hr />
+					<p data-bind="html:LongDescriptionFlat"></p>
+
+					<br />
+                    <span data-bind="visible: AllowQuickApply">
+						<a class="job-link" data-bind="attr: { href: QuickApplyUrl }" target="_blank">
+							Quick Apply
+						</a>
+						&nbsp;&nbsp;
+					</span>
+
+                    <span data-bind="visible: AllowStandardApply">
+					    <a class="job-link" data-bind="attr: { href: $parent.applyNowLink(this, $data) }" target="_blank">
+						    Apply Now
+					    </a>
+                    </span>
+					&nbsp;&nbsp;
+					<a class="job-link" rel="modal:close" href="#" data-bind="click: $parent.jobDetail.bind(this,'close')" target="_blank">
+						Close
+					</a>
+				</div>
+
+				<div id="jobAlert" style="max-width: 400px; display: none;" data-bind="with:jobAlertRequest">
+					<h1 class="project-title">Job Alert</h1>
+					<hr />
+					<table>
+						<tr><td style="width: 100px">First Name</td><td><input data-bind="value: firstName" type="text" /></td></tr>
+						<tr><td>Last Name</td><td><input data-bind="value: lastName" type="text" /></td></tr>
+						<tr><td>E-mail</td><td><input data-bind="value: email" type="text" /></td></tr>
+						<tr><td></td><td><br/><a class="job-link" data-bind="click:submit">Subscribe</a></td></tr>
+						<tr><td></td><td><span data-bind="text:message.message, css:message.style"></span></td></tr>
+					</table>
+				</div>
+				<!--End Modal windows-->
+			</div>
+			<!--End PrismHR Job Blocks-->
+	    </div>
+	</div>
+</div>
